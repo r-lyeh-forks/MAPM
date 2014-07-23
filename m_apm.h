@@ -227,6 +227,8 @@ extern	void	m_apm_set_double(M_APM, double);
 extern	void	m_apm_set_long(M_APM, long);
 
 extern	void	m_apm_to_string(char *, int, M_APM);
+extern  double  m_apm_get_double(M_APM atmp);
+
 extern  void	m_apm_to_fixpt_string(char *, int, M_APM);
 extern  void	m_apm_to_fixpt_stringex(char *, int, M_APM, char, char, int);
 extern  char	*m_apm_to_fixpt_stringexp(int, M_APM, char, char, int);
@@ -425,6 +427,8 @@ public:
 	~MAPM() {destroy();}
 
 	/* Extracting string descriptions: */
+	double toDouble() const
+	{ return m_apm_get_double(cval()); }
 	void toString(char *dest,int decimalPlaces) const
 		{m_apm_to_string(dest,decimalPlaces,cval());}
 	void toFixPtString(char *dest,int decimalPlaces) const

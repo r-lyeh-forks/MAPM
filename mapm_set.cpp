@@ -410,3 +410,37 @@ else
 M_restore_stack(1);
 }
 /****************************************************************************/
+
+
+/****************************************************************************/
+/*
+        convert a M_APM value into a C 'double'
+	copied from mapm 2003 version. I think it's better to do it directly
+	instead of creating a string and converting it.
+*/
+double m_apm_get_double(M_APM atmp)
+{
+  UCHAR numdiv, numrem;
+
+  double result = 0;
+  int index=0;
+
+  int max_i = (atmp->m_apm_datalength + 1) >> 1;
+  if(max_i > ((17 + 1) >> 1)) {
+    // We only need to deal with the top 17 digits, by which point we've
+    // maxed out the double's mantissa.
+    max_i = ((17 + 1) >> 1);
+  }
+
+  for(; index < max_i; ++index) {
+    M_get_div_rem_10((int)atmp->m_apm_data[index], &numdiv, &numrem);
+    result = result * 100 + (double)numdiv * 10 + numrem;
+  }
+
+  result *= pow(10, atmp->m_apm_exponent - (max_i << 1));
+
+  if(atmp->m_apm_sign == -1)
+    result *= -1;
+  
+  return result;
+}
