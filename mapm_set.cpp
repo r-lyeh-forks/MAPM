@@ -83,6 +83,7 @@
  */
 
 #include "m_apm_lc.h"
+#include <limits>
 
 static	char *M_buf  = NULL;
 static  int   M_lbuf = 0;
@@ -105,7 +106,7 @@ int     len, ii, nbytes;
 char	*p, *buf, ch, buf2[64];
 
 /* if zero, return right away */
-
+atmp->m_apm_error = false;
 if (mm == 0)
   {
    M_set_to_zero(atmp);
@@ -325,7 +326,7 @@ M_APM   ctmp;
 char	*cp;
 int	i, index, first, max_i, num_digits, dec_places;
 UCHAR	numdiv, numrem;
-
+mtmp->m_apm_error = false;
 ctmp = M_get_stack_var();
 dec_places = places;
 
@@ -424,7 +425,7 @@ double m_apm_get_double(M_APM atmp)
 
   double result = 0;
   int index=0;
-
+  atmp->m_apm_error = false;
   int max_i = (atmp->m_apm_datalength + 1) >> 1;
   if(max_i > ((17 + 1) >> 1)) {
     // We only need to deal with the top 17 digits, by which point we've

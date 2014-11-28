@@ -178,6 +178,7 @@ typedef struct  {
 	int	m_apm_datalength;
 	int	m_apm_exponent;
 	int	m_apm_sign;
+	unsigned char m_apm_error;
 } M_APM_struct;
 
 typedef M_APM_struct *M_APM;
@@ -245,6 +246,7 @@ extern	int	m_apm_significant_digits(M_APM);
 extern	int	m_apm_is_integer(M_APM);
 extern	int	m_apm_is_even(M_APM);
 extern	int	m_apm_is_odd(M_APM);
+extern  int     m_apm_is_nan(M_APM);
 
 extern	void	m_apm_gcd(M_APM, M_APM, M_APM);
 extern	void	m_apm_lcm(M_APM, M_APM, M_APM);
