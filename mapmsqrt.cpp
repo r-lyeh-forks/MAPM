@@ -92,6 +92,12 @@ void	m_apm_sqrt(M_APM rr, int places, M_APM aa)
 M_APM   last_x, guess, tmpN, tmp7, tmp8, tmp9;
 int	ii, bflag, nexp, tolerance, dplaces;
 
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
+
 if (aa->m_apm_sign <= 0)
   {
    if (aa->m_apm_sign == -1)

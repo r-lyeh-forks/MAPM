@@ -83,6 +83,11 @@ extern void M_fast_multiply(M_APM, M_APM, M_APM);
 /****************************************************************************/
 void	m_apm_multiply(M_APM r, M_APM a, M_APM b)
 {
+ if (a->m_apm_error || b->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 int	ai, itmp, sign, nexp, ii, jj, indexa, indexb, index0, numdigits;
 UCHAR   *cp, *cpr, *cp_div, *cp_rem;
 void	*vp;

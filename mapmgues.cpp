@@ -171,9 +171,9 @@ else
    if ((cp = strstr(buf, "E")) == NULL)
      {
       M_apm_log_error_msg(M_APM_RETURN,
-      "\'m_apm_set_double\', Invalid double input (likely a NAN or +/- INF)");
-
-      M_set_to_zero(atmp);
+      "\'m_apm_set_double\', Invalid ---double input (likely a NAN or +/- INF)");
+      
+      M_set_to_error(atmp);
       return;
      }
 

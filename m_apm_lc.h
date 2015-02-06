@@ -311,6 +311,7 @@ extern   void   memory_free(void *);
 extern  int     MM_lc_PI_digits;
 extern  int     MM_lc_log_digits;
 
+extern int MAPM_SHOW_ERRORS;
 /*
  *   constants not in m_apm.h
  */
@@ -391,9 +392,13 @@ extern  void    M_long_2_ascii(char *, long);
 extern	void	M_check_PI_places(int);
 extern  void    M_calculate_PI_AGM(M_APM, int);
 extern  void    M_set_to_zero(M_APM);
+extern	void	M_set_to_error(M_APM);
 extern	int	M_strposition(char *, char *);
 extern	char	*M_lowercase(char *);
 extern  void    M_apm_log_error_msg(int, char *);
+extern	void	M_apm_enable_log();
+extern	void	M_apm_disable_log();
+extern	int	M_apm_log_status();
 extern  void	M_apm_round_fixpt(M_APM, int, M_APM);
 
 #endif

@@ -139,6 +139,11 @@ void	m_apm_factorial(M_APM moutput, M_APM minput)
 int     ii, nmul, ndigits, nd, jj, kk, mm, ct;
 M_APM   array[NDIM];
 M_APM   iprod1, iprod2, tmp1, tmp2;
+ if (minput->m_apm_error)
+   {
+     M_set_to_error(moutput);
+     return;
+   }
 
 /* return 1 for any input <= 1 */
 

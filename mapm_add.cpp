@@ -61,6 +61,12 @@ void	m_apm_add(M_APM r, M_APM a, M_APM b)
 {
 int	j, carry, sign, aexp, bexp, adigits, bdigits;
 
+ if (a->m_apm_error || b->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
+
 if (M_add_firsttime)
   {
    M_add_firsttime = FALSE;
@@ -186,6 +192,11 @@ void	m_apm_subtract(M_APM r, M_APM a, M_APM b)
 {
 int	itmp, j, flag, icompare, sign, aexp, bexp, 
 	borrow, adigits, bdigits;
+ if (a->m_apm_error || b->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 if (M_add_firsttime)
   {

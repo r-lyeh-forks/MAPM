@@ -55,6 +55,11 @@
 void	m_apm_floor(M_APM bb, M_APM aa)
 {
 M_APM	mtmp;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(bb);
+     return;
+   }
 
 m_apm_copy(bb, aa);
 
@@ -96,6 +101,11 @@ else
 void	m_apm_ceil(M_APM bb, M_APM aa)
 {
 M_APM	mtmp;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(bb);
+     return;
+   }
 
 m_apm_copy(bb, aa);
 

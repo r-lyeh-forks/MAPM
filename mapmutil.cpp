@@ -144,6 +144,7 @@ atmp->m_apm_id           = M_APM_IDENT;
 atmp->m_apm_malloclength = 80;
 atmp->m_apm_datalength   = 1;
 atmp->m_apm_refcount     = 1;           /* not for us, for MAPM C++ class */
+ atmp->m_apm_error        = 0;
 atmp->m_apm_exponent     = 0;
 atmp->m_apm_sign         = 0;
 
@@ -268,6 +269,12 @@ void	M_get_div_rem_10(int tbl_lookup, UCHAR *ndiv, UCHAR *nrem)
 /****************************************************************************/
 void	m_apm_round(M_APM btmp, int places, M_APM atmp) 
 {
+  if (atmp->m_apm_error)
+   {
+     M_set_to_error(btmp);
+     return;
+   }
+
 int	ii;
 
 if (M_util_firsttime)
