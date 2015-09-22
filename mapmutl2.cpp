@@ -47,7 +47,7 @@
  */
 
 #include "m_apm_lc.h"
-
+#include <iostream>
 /****************************************************************************/
 int	m_apm_sign(M_APM atmp)
 {
@@ -108,6 +108,11 @@ if ((ii & 1) == 0)
 else
   return(0);
 }
+
+int	m_apm_is_nan(M_APM a)
+{
+  return (a->m_apm_error);
+}
 /****************************************************************************/
 int 	m_apm_is_odd(M_APM bb)
 {
@@ -117,16 +122,31 @@ else
   return(1);
 }
 /****************************************************************************/
+void	M_set_to_error(M_APM z)
+{
+z->m_apm_datalength = 1;
+z->m_apm_sign       = 0;
+z->m_apm_exponent   = 0;
+z->m_apm_data[0]    = 0;
+ z->m_apm_error = 1;
+}
+/****************************************************************************/
 void	M_set_to_zero(M_APM z)
 {
 z->m_apm_datalength = 1;
 z->m_apm_sign       = 0;
 z->m_apm_exponent   = 0;
 z->m_apm_data[0]    = 0;
+ z->m_apm_error = 0;
 }
 /****************************************************************************/
 void	m_apm_negate(M_APM d, M_APM s)
 {
+  if (s->m_apm_error)
+   {
+     M_set_to_error(d);
+     return;
+   }
 m_apm_copy(d,s);
 if (d->m_apm_sign != 0)
     d->m_apm_sign = -(d->m_apm_sign);
@@ -134,6 +154,12 @@ if (d->m_apm_sign != 0)
 /****************************************************************************/
 void	m_apm_absolute_value(M_APM d, M_APM s)
 {
+  if (s->m_apm_error)
+   {
+     M_set_to_error(d);
+     return;
+   }
+
 m_apm_copy(d,s);
 if (d->m_apm_sign != 0)
     d->m_apm_sign = 1;
@@ -143,7 +169,6 @@ void	m_apm_copy(M_APM dest, M_APM src)
 {
 int	j;
 void	*vp;
-
 j = (src->m_apm_datalength + 1) >> 1;
 if (j > dest->m_apm_malloclength)
   {
@@ -153,20 +178,24 @@ if (j > dest->m_apm_malloclength)
 
       M_apm_log_error_msg(M_APM_FATAL, "\'m_apm_copy\', Out of memory");
      }
-   
+
    dest->m_apm_malloclength = j + 28;
    dest->m_apm_data = (UCHAR *)vp;
   }
-
 dest->m_apm_datalength = src->m_apm_datalength;
 dest->m_apm_exponent   = src->m_apm_exponent;
 dest->m_apm_sign       = src->m_apm_sign;
-
+ dest->m_apm_error      = src->m_apm_error;
 memcpy(dest->m_apm_data, src->m_apm_data, j);
 }
 /****************************************************************************/
 int	m_apm_compare(M_APM ltmp, M_APM rtmp)
 {
+ if (ltmp->m_apm_error || rtmp->m_apm_error)
+   {
+       return 0;
+   }
+
 int	llen, rlen, lsign, rsign, i, j, lexp, rexp;
 
 llen  = ltmp->m_apm_datalength;
@@ -235,6 +264,27 @@ if (lsign == 1)
 else
   return(1);
 }
+
+int	m_apm_equals(M_APM ltmp, M_APM rtmp)
+{
+ if (ltmp->m_apm_error || rtmp->m_apm_error)
+   {
+       return 0;
+   }
+ else
+   return m_apm_compare(ltmp, rtmp) == 0;
+}
+
+int	m_apm_not_equals(M_APM ltmp, M_APM rtmp)
+{
+ if (ltmp->m_apm_error || rtmp->m_apm_error)
+   {
+       return 1;
+   }
+ else
+   return m_apm_compare(ltmp, rtmp) != 0;
+}
+
 /****************************************************************************/
 /*
  *

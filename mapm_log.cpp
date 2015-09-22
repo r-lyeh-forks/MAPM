@@ -130,6 +130,11 @@ void	m_apm_log10(M_APM rr, int places, M_APM aa)
 {
 int     dplaces;
 M_APM   tmp8, tmp9;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 tmp8 = M_get_stack_var();
 tmp9 = M_get_stack_var();
@@ -147,6 +152,11 @@ void	m_apm_log(M_APM r, int places, M_APM a)
 {
 M_APM   tmp0, tmp1, tmp2;
 int	mexp, dplaces;
+ if (a->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 if (a->m_apm_sign <= 0)
   {

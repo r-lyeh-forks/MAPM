@@ -126,13 +126,18 @@ int	ix, iy;
 
 iy = yy->m_apm_sign;
 ix = xx->m_apm_sign;
+ if (xx->m_apm_error || yy->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 if (ix == 0)       /* x == 0 */
   {
    if (iy == 0)    /* y == 0 */
      {
       M_apm_log_error_msg(M_APM_RETURN, "\'m_apm_arctan2\', Both Inputs = 0");
-      M_set_to_zero(rr);
+      M_set_to_error(rr);
       return;
      }
 
@@ -202,10 +207,15 @@ M_restore_stack(3);
 void	m_apm_arctan(M_APM rr, int places, M_APM xx)
 {
 M_APM   tmp8, tmp9;
+ if (xx->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 if (xx->m_apm_sign == 0)			/* input == 0 ?? */
   {
-   M_set_to_zero(rr);
+   M_set_to_error(rr);
    return;
   }
 
@@ -244,6 +254,11 @@ M_restore_stack(2);
 void	M_arctan_large_input(M_APM rr, int places, M_APM xx)
 {
 M_APM	tmp1, tmp2;
+ if (xx->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 tmp1 = M_get_stack_var();
 tmp2 = M_get_stack_var();
@@ -265,6 +280,11 @@ void	m_apm_arcsin(M_APM r, int places, M_APM x)
 {
 M_APM   tmp0, tmp1, tmp2, tmp3, current_x;
 int	ii, maxiter, maxp, tolerance, local_precision;
+ if (x->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 current_x = M_get_stack_var();
 tmp0      = M_get_stack_var();
@@ -279,7 +299,7 @@ ii = m_apm_compare(tmp0, MM_One);
 if (ii == 1)       /* |x| > 1 */
   {
    M_apm_log_error_msg(M_APM_RETURN, "\'m_apm_arcsin\', |Argument| > 1");
-   M_set_to_zero(r);
+   M_set_to_error(r);
    M_restore_stack(5);
    return;
   }
@@ -385,6 +405,11 @@ void	m_apm_arccos(M_APM r, int places, M_APM x)
 {
 M_APM   tmp0, tmp1, tmp2, tmp3, current_x;
 int	ii, maxiter, maxp, tolerance, local_precision;
+ if (x->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 current_x = M_get_stack_var();
 tmp0      = M_get_stack_var();
@@ -399,7 +424,7 @@ ii = m_apm_compare(tmp0, MM_One);
 if (ii == 1)       /* |x| > 1 */
   {
    M_apm_log_error_msg(M_APM_RETURN, "\'m_apm_arccos\', |Argument| > 1");
-   M_set_to_zero(r);
+   M_set_to_error(r);
    M_restore_stack(5);
    return;
   }

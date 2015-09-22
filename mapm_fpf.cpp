@@ -64,7 +64,6 @@ char	*m_apm_to_fixpt_stringexp(int dplaces, M_APM atmp,
 {
 int	places, xp, dl, ii;
 char	*cpr;
-
 places = dplaces;
 
 dl = atmp->m_apm_datalength;
@@ -104,6 +103,11 @@ return(cpr);
 void	m_apm_to_fixpt_stringex(char *s, int dplaces, M_APM atmp, 
 				char ch_radix, char ch_sep, int count_sep)
 {
+ if (atmp->m_apm_error)
+   {
+     strcpy(s, "NaN");
+     return;
+   }
 M_APM   btmp;
 char    ch, *cpd, *cps;
 int	ii, jj, kk, ct, dl, xp, no_sep_flg, places;

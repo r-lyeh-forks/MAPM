@@ -64,6 +64,12 @@ M_APM   tmpM, tmpN, tmpT, tmpU, tmpV;
 int	kk, kr, mm;
 long    pow_2;
 
+ if (u->m_apm_error || v->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
+
 /* 'is_integer' will return 0 || 1 */
 
 if ((m_apm_is_integer(u) + m_apm_is_integer(v)) != 2)
@@ -221,6 +227,11 @@ M_restore_stack(5);
 void	m_apm_lcm(M_APM r, M_APM u, M_APM v)
 {
 M_APM   tmpN, tmpG;
+ if (u->m_apm_error || v->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 tmpN = M_get_stack_var();
 tmpG = M_get_stack_var();
@@ -256,6 +267,11 @@ M_restore_stack(2);
 void	m_apm_gcd_traditional(M_APM r, M_APM u, M_APM v)
 {
 M_APM   tmpD, tmpN, tmpU, tmpV;
+ if (u->m_apm_error || v->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 tmpD = M_get_stack_var();
 tmpN = M_get_stack_var();

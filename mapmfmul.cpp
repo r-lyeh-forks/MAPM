@@ -314,7 +314,11 @@ void	M_fast_multiply(M_APM rr, M_APM aa, M_APM bb)
 {
 void	*vp;
 int	ii, k, nexp, sign;
-
+ if (aa->m_apm_error || bb->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 if (M_firsttimef)
   {
    M_firsttimef = FALSE;

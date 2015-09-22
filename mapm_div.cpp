@@ -1,4 +1,3 @@
-
 /* 
  *  M_APM  -  mapm_div.c
  *
@@ -89,6 +88,13 @@ if (M_div_firsttime == FALSE)
 /****************************************************************************/
 void	m_apm_integer_div_rem(M_APM qq, M_APM rr, M_APM aa, M_APM bb)
 {
+ if (aa->m_apm_error || bb->m_apm_error)
+   {
+     M_set_to_error(rr);
+     M_set_to_error(qq);
+     return;
+   }
+
 m_apm_integer_divide(qq, aa, bb);
 m_apm_multiply(M_div_tmp7, qq, bb);
 m_apm_subtract(rr, aa, M_div_tmp7);
@@ -103,6 +109,11 @@ void	m_apm_integer_divide(M_APM rr, M_APM aa, M_APM bb)
  *    nnm.999999...  -->  nn(m+1).0000 which would 
  *    invalidate the 'integer_divide' goal).
  */
+ if (aa->m_apm_error || bb->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 M_apm_sdivide(rr, 4, aa, bb);
 

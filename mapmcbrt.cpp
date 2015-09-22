@@ -54,6 +54,12 @@
 /****************************************************************************/
 void	m_apm_cbrt(M_APM rr, int places, M_APM aa)
 {
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
+
 M_APM   last_x, guess, tmpN, tmp7, tmp8, tmp9;
 int	ii, nexp, bflag, tolerance, maxp, local_precision;
 

@@ -58,6 +58,11 @@
 void	m_apm_arcsinh(M_APM rr, int places, M_APM aa)
 {
 M_APM	tmp0, tmp1, tmp2;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 /* result is 0 if input is 0 */
 
@@ -92,6 +97,11 @@ void	m_apm_arccosh(M_APM rr, int places, M_APM aa)
 {
 M_APM	tmp1, tmp2;
 int     ii;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 ii = m_apm_compare(aa, MM_One);
 
@@ -123,6 +133,11 @@ void	m_apm_arctanh(M_APM rr, int places, M_APM aa)
 {
 M_APM	tmp1, tmp2, tmp3;
 int     ii, local_precision;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 tmp1 = M_get_stack_var();
 

@@ -45,6 +45,12 @@
  */
 void	m_apm_sinh(M_APM rr, int places, M_APM aa)
 {
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
+
 M_APM	tmp1, tmp2, tmp3;
 int     local_precision;
 
@@ -70,6 +76,11 @@ void	m_apm_cosh(M_APM rr, int places, M_APM aa)
 {
 M_APM	tmp1, tmp2, tmp3;
 int     local_precision;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 tmp1 = M_get_stack_var();
 tmp2 = M_get_stack_var();
@@ -93,6 +104,11 @@ void	m_apm_tanh(M_APM rr, int places, M_APM aa)
 {
 M_APM	tmp1, tmp2, tmp3, tmp4;
 int     local_precision;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 tmp1 = M_get_stack_var();
 tmp2 = M_get_stack_var();

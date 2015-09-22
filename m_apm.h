@@ -158,7 +158,7 @@
 
 #ifndef M__APM__INCLUDED
 #define M__APM__INCLUDED
-
+#include <iostream>
 #ifdef __cplusplus
 /* Comment this line out if you've compiled the library as C++. */
 #define APM_CONVERT_FROM_C
@@ -178,6 +178,7 @@ typedef struct  {
 	int	m_apm_datalength;
 	int	m_apm_exponent;
 	int	m_apm_sign;
+	unsigned char m_apm_error;
 } M_APM_struct;
 
 typedef M_APM_struct *M_APM;
@@ -227,6 +228,8 @@ extern	void	m_apm_set_double(M_APM, double);
 extern	void	m_apm_set_long(M_APM, long);
 
 extern	void	m_apm_to_string(char *, int, M_APM);
+extern  double  m_apm_get_double(M_APM atmp);
+
 extern  void	m_apm_to_fixpt_string(char *, int, M_APM);
 extern  void	m_apm_to_fixpt_stringex(char *, int, M_APM, char, char, int);
 extern  char	*m_apm_to_fixpt_stringexp(int, M_APM, char, char, int);
@@ -237,12 +240,15 @@ extern	void	m_apm_negate(M_APM, M_APM);
 extern	void	m_apm_copy(M_APM, M_APM);
 extern	void	m_apm_round(M_APM, int, M_APM);
 extern	int	m_apm_compare(M_APM, M_APM);
+extern	int	m_apm_equals(M_APM, M_APM);
+extern	int	m_apm_not_equals(M_APM, M_APM);
 extern	int	m_apm_sign(M_APM);
 extern	int	m_apm_exponent(M_APM);
 extern	int	m_apm_significant_digits(M_APM);
 extern	int	m_apm_is_integer(M_APM);
 extern	int	m_apm_is_even(M_APM);
 extern	int	m_apm_is_odd(M_APM);
+extern  int     m_apm_is_nan(M_APM);
 
 extern	void	m_apm_gcd(M_APM, M_APM, M_APM);
 extern	void	m_apm_lcm(M_APM, M_APM, M_APM);
@@ -286,6 +292,9 @@ extern  void    m_apm_arccosh(M_APM, int, M_APM);
 extern  void    m_apm_arctanh(M_APM, int, M_APM);
 
 extern  void    m_apm_cpp_precision(int);   /* only for C++ wrapper */
+extern	void	M_apm_enable_log();
+extern	void	M_apm_disable_log();
+extern	int	M_apm_log_status();
 
 /* more intuitive alternate names for the ARC functions ... */
 
@@ -417,14 +426,24 @@ public:
 		{create();m_apm_set_string(val(),(char *)s);}
 	MAPM(double d) /* Constructor from double-precision float */
 		{create();m_apm_set_double(val(),d);}
+	MAPM(long double d) /* Constructor from double-precision float */
+		{create();m_apm_set_double(val(),d);}
 	MAPM(int l) /* Constructor from int */
 		{create();m_apm_set_long(val(),l);}
+	MAPM(unsigned l) /* Constructor from int */
+		{create();m_apm_set_long(val(),l);}
 	MAPM(long l) /* Constructor from long int */
+		{create();m_apm_set_long(val(),l);}
+	MAPM(long long l) /* Constructor from long int */
+		{create();m_apm_set_long(val(),l);}
+	MAPM(long unsigned l) /* Constructor from long int */
 		{create();m_apm_set_long(val(),l);}
 	/* Destructor */
 	~MAPM() {destroy();}
 
 	/* Extracting string descriptions: */
+	double toDouble() const
+	{ return m_apm_get_double(cval()); }
 	void toString(char *dest,int decimalPlaces) const
 		{m_apm_to_string(dest,decimalPlaces,cval());}
 	void toFixPtString(char *dest,int decimalPlaces) const
@@ -466,21 +485,23 @@ public:
 
 	/* Comparison operators */
 	int operator==(const MAPM &m) const /* Equality operator */
-	 {return m_apm_compare(cval(),m.cval())==0;}
+	{return m_apm_equals(cval(),m.cval());}
 	int operator!=(const MAPM &m) const /* Inequality operator */
-	 {return m_apm_compare(cval(),m.cval())!=0;}
+	{return m_apm_not_equals(cval(),m.cval());}
 	int operator<(const MAPM &m) const
 	 {return m_apm_compare(cval(),m.cval())<0;}
 	int operator<=(const MAPM &m) const
-	 {return m_apm_compare(cval(),m.cval())<=0;}
+	{ if (m_apm_is_nan(cval()) || m_apm_is_nan(m.cval())) return 0;
+	   return m_apm_compare(cval(),m.cval())<=0;}
 	int operator>(const MAPM &m) const
 	 {return m_apm_compare(cval(),m.cval())>0;}
 	int operator>=(const MAPM &m) const
-	 {return m_apm_compare(cval(),m.cval())>=0;}
+	 { if (m_apm_is_nan(cval()) || m_apm_is_nan(m.cval())) return 0;
+	   return m_apm_compare(cval(),m.cval())>=0;}
 
 	/* Basic arithmetic operators */
 	friend MAPM operator+(const MAPM &a,const MAPM &b)
-	 {MAPM ret;m_apm_add(ret.val(),a.cval(),b.cval());return ret;}
+	{MAPM ret;m_apm_add(ret.val(),a.cval(),b.cval());return ret;}
 	friend MAPM operator-(const MAPM &a,const MAPM &b)
 	 {MAPM ret;m_apm_subtract(ret.val(),a.cval(),b.cval());return ret;}
 	friend MAPM operator*(const MAPM &a,const MAPM &b)
@@ -519,7 +540,8 @@ public:
 		{return m_apm_is_even(cval());}
 	int is_odd(void) const
 		{return m_apm_is_odd(cval());}
-
+	int is_nan(void) const
+	{ return m_apm_is_nan(cval()); }
 	/* Functions: */
 	MAPM abs(void) const
 		{MAPM ret;m_apm_absolute_value(ret.val(),cval());return ret;}
@@ -607,6 +629,10 @@ public:
 	MAPM div(const MAPM &denom) const {return integer_divide(denom);}
 	MAPM rem(const MAPM &denom) const {MAPM ret,ignored;
 		integer_div_rem(denom,ignored,ret);return ret;}
+
+	static void enable_log() { M_apm_enable_log(); }
+	static void disable_log() { M_apm_disable_log(); }
+	static bool log_status() { return (M_apm_log_status()); }
 };
 
 /* math.h-style functions: */

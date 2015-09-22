@@ -85,6 +85,11 @@
 void	m_apm_sin(M_APM r, int places, M_APM a)
 {
 M_APM	tmp3;
+ if (a->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 tmp3 = M_get_stack_var();
 M_limit_angle_to_pi(tmp3, (places + 6), a);
@@ -95,6 +100,11 @@ M_restore_stack(1);
 void	m_apm_cos(M_APM r, int places, M_APM a)
 {
 M_APM	tmp3;
+ if (a->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 tmp3 = M_get_stack_var();
 M_limit_angle_to_pi(tmp3, (places + 6), a);
@@ -105,6 +115,12 @@ M_restore_stack(1);
 void	m_apm_sin_cos(M_APM sinv, M_APM cosv, int places, M_APM aa)
 {
 M_APM	tmp5, tmp6, tmp7;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(sinv);
+     M_set_to_error(cosv);
+     return;
+   }
 
 tmp5 = M_get_stack_var();
 tmp6 = M_get_stack_var();
@@ -133,6 +149,11 @@ M_restore_stack(3);
 void	m_apm_tan(M_APM r, int places, M_APM a)
 {
 M_APM	tmps, tmpc, tmp0;
+ if (a->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 tmps = M_get_stack_var();
 tmpc = M_get_stack_var();
@@ -150,6 +171,11 @@ M_restore_stack(3);
 void	M_limit_angle_to_pi(M_APM rr, int places, M_APM aa)
 {
 M_APM	tmp7, tmp8, tmp9;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 M_check_PI_places(places);
 

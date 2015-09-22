@@ -140,6 +140,7 @@
  */
 
 #include "m_apm_lc.h"
+#include <iostream>
 
 static  M_APM  MM_exp_log2R;
 static  M_APM  MM_exp_512R;
@@ -161,6 +162,11 @@ void	m_apm_exp(M_APM r, int places, M_APM x)
 {
 M_APM   tmp7, tmp8, tmp9;
 int	dplaces, nn, ii;
+ if (x->m_apm_error)
+   {
+     M_set_to_error(r);
+     return;
+   }
 
 if (MM_firsttime1)
   {
@@ -183,12 +189,12 @@ if (x->m_apm_sign == 0)		/* if input == 0, return '1' */
    M_restore_stack(3);
    return;
   }
-
 if (x->m_apm_exponent <= -3)  /* already small enough so call _raw directly */
   {
    M_raw_exp(tmp9, (places + 6), x);
    m_apm_round(r, places, tmp9);
    M_restore_stack(3);
+
    return;
   }
 
@@ -214,7 +220,7 @@ if (M_exp_compute_nn(&nn, tmp7, x) != 0)
    M_apm_log_error_msg(M_APM_RETURN, 
       "\'m_apm_exp\', Input too large, Overflow");
 
-   M_set_to_zero(r);
+   M_set_to_error(r);
    M_restore_stack(3);
    return;
   }
@@ -240,7 +246,8 @@ while (TRUE)
       if (tmp7->m_apm_exponent == 0)
         break;
      }
-     
+   char dest[20];
+   m_apm_to_string(dest,10,tmp7);
    if (tmp7->m_apm_sign >= 0)
      {
       nn++;
@@ -366,6 +373,11 @@ void	M_raw_exp(M_APM rr, int places, M_APM xx)
 M_APM   tmp0, digit, term;
 int	tolerance,  local_precision, prev_exp;
 long    m1;
+ if (xx->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 tmp0  = M_get_stack_var();
 term  = M_get_stack_var();
@@ -387,7 +399,6 @@ while (TRUE)
    m_apm_divide(term, local_precision, tmp0, digit);
    m_apm_add(tmp0, rr, term);
    m_apm_copy(rr, tmp0);
-
    if ((term->m_apm_exponent < tolerance) || (term->m_apm_sign == 0))
      break;
 

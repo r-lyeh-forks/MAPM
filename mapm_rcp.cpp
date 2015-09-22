@@ -63,7 +63,7 @@ if (sn == 0)                  /* one number is zero, result is zero */
       M_apm_log_error_msg(M_APM_RETURN, "\'m_apm_divide\', Divide by 0");
      }
 
-   M_set_to_zero(rr);
+   M_set_to_error(rr);
    return;
   }
 

@@ -50,6 +50,11 @@ void	m_apm_integer_pow(M_APM rr, int places, M_APM aa, int mexp)
 {
 M_APM   tmp0, tmpy, tmpz;
 int	nexp, ii, signflag, local_precision;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 if (mexp == 0)
   {

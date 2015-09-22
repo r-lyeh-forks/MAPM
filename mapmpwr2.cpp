@@ -48,6 +48,11 @@ void	m_apm_integer_pow_nr(M_APM rr, M_APM aa, int mexp)
 {
 M_APM   tmp0, tmpy, tmpz;
 int	nexp, ii;
+ if (aa->m_apm_error)
+   {
+     M_set_to_error(rr);
+     return;
+   }
 
 if (mexp == 0)
   {

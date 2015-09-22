@@ -42,6 +42,7 @@
 
 #include "m_apm_lc.h"
 
+int MAPM_SHOW_ERRORS = 1;
 /****************************************************************************/
 void	M_apm_log_error_msg(int fatal, char *message)
 {
@@ -52,8 +53,22 @@ if (fatal)
   }
 else
   {
-   fprintf(stderr, "MAPM Warning: %s\n", message);
+    if (MAPM_SHOW_ERRORS)
+      fprintf(stderr, "MAPM Warning: %s\n", message);
   }
 }
 /****************************************************************************/
+
+void	M_apm_enable_log()
+{
+  MAPM_SHOW_ERRORS = 1;
+}
+void	M_apm_disable_log()
+{
+  MAPM_SHOW_ERRORS = 0;
+}
+int	M_apm_log_status()
+{
+  return MAPM_SHOW_ERRORS;
+}
 
